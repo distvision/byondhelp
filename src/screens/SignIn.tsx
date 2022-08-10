@@ -1,5 +1,6 @@
 import { useState } from "react";
-
+import { Alert } from "react-native";
+import auth from "@react-native-firebase/auth";
 import { VStack, Heading, Icon, useTheme } from "native-base";
 import { FontAwesome, Octicons } from "@expo/vector-icons";
 import Logo from "../assets/logo_primary.svg";
@@ -7,10 +8,16 @@ import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 
 export function SignIn() {
-  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const { colors } = useTheme();
+
+  function handleSingIn() {
+    if (!email || !password) {
+      return Alert.alert("Entrar", "Informe e-mail e senha");
+    }
+  }
 
   return (
     <VStack flex={1} alignItems="center" bg="gray.600" px={8} pt={24}>
@@ -21,7 +28,7 @@ export function SignIn() {
       </Heading>
 
       <Input
-        onChangeText={setName}
+        onChangeText={setEmail}
         placeholder="E-mail"
         mb={4}
         InputLeftElement={

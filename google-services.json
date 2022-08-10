@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "945609257050",
+    "project_id": "byondhelp-4bcf8",
+    "storage_bucket": "byondhelp-4bcf8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:945609257050:android:98d2c1aefd0903ff072863",
+        "android_client_info": {
+          "package_name": "com.byondhelp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "945609257050-7e5ug3gcsqn2lrmvbjgcaohu9h9okipk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjnKDVC992g6FYLRaMZQ44Qar6uDGXm_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "945609257050-7e5ug3gcsqn2lrmvbjgcaohu9h9okipk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "945609257050-8mkoqh3cag9igf5be9fq5078ei7bjhum.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.byondhelp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
