@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Alert } from "react-native";
+import auth from "@react-native-firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 import { Octicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import {
@@ -42,6 +44,15 @@ export function Home() {
     navigation.navigate("details", { orderId });
   }
 
+  function handleLogOut() {
+    auth()
+      .signOut()
+      .catch((error) => {
+        console.log(error);
+        return Alert.alert("Sair", "Não foi possivel sair");
+      });
+  }
+
   return (
     <VStack flex={1} pb={6} bg="gray.700">
       <HStack
@@ -57,6 +68,7 @@ export function Home() {
 
         <IconButton
           icon={<Octicons name="sign-out" size={24} color={colors.gray[300]} />}
+          onPress={handleLogOut}
         />
       </HStack>
 

@@ -1,12 +1,11 @@
+import { FontAwesome, Octicons } from "@expo/vector-icons";
+import auth from "@react-native-firebase/auth";
+import { Heading, Icon, useTheme, VStack } from "native-base";
 import { useState } from "react";
 import { Alert } from "react-native";
-import auth from "@react-native-firebase/auth";
-import { VStack, Heading, Icon, useTheme } from "native-base";
-import { FontAwesome, Octicons } from "@expo/vector-icons";
 import Logo from "../assets/logo_primary.svg";
-import { Input } from "../components/Input";
 import { Button } from "../components/Button";
-import { isLoading } from "expo-font";
+import { Input } from "../components/Input";
 
 export function SignIn() {
   const [isLoading, setIsLoading] = useState(false);
