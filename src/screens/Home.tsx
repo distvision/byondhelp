@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert } from "react-native";
 import auth from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
+
 import { useNavigation } from "@react-navigation/native";
 import { Octicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import {
@@ -13,25 +15,24 @@ import {
   useTheme,
   VStack
 } from "native-base";
+
+import { dateFormat } from "../utils/firestoreDateFormat";
+
 import Logo from "../assets/logo_secondary.svg";
 import { Button } from "../components/Button";
 import { Filter } from "../components/Filter";
+import { Loading } from "../components/Loading";
 import { Order, Orderprops } from "../components/Order";
+import { isLoaded } from "expo-font";
 
 // imports ends here
 
 export function Home() {
+  const [loading, setIsLoading] = useState(true);
   const [statusSelected, setStatusSelected] = useState<"open" | "closed">(
     "open"
   );
-  const [orders, setOrders] = useState<Orderprops[]>([
-    {
-      id: "432",
-      patrimony: "123456",
-      when: "17/07/2022 as 07:00",
-      status: "open"
-    }
-  ]);
+  const [orders, setOrders] = useState<Orderprops[]>([]);
 
   const navigation = useNavigation();
   const { colors } = useTheme();
@@ -52,6 +53,30 @@ export function Home() {
         return Alert.alert("Sair", "Não foi possivel sair");
       });
   }
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    const subscriber = firestore()
+      .collection("orders")
+      .where("status", "==", statusSelected)
+      .onSnapshot((snapshot) => {
+        const data = snapshot.docs.map((doc) => {
+          const { patrimony, description, status, created_at } = doc.data();
+
+          return {
+            id: doc.id,
+            patrimony,
+            description,
+            status,
+            when: dateFormat(created_at)
+          };
+        });
+
+        setOrders(data);
+        setIsLoading(false);
+      });
+  }, [statusSelected]);
 
   return (
     <VStack flex={1} pb={6} bg="gray.700">
@@ -99,28 +124,32 @@ export function Home() {
           />
         </HStack>
 
-        <FlatList
-          data={orders}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <Order data={item} onPress={() => handleOpenDetails(item.id)} />
-          )}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 100 }}
-          ListEmptyComponent={() => (
-            <Center>
-              <MaterialCommunityIcons
-                name="message-text-outline"
-                size={40}
-                color={colors.gray[300]}
-              />
-              <Text color="gray.300" fontSize="xl" mt={6} textAlign="center">
-                Você ainda não tem {"\n"} solicitações
-                {statusSelected === "open" ? " em andamento" : " finalizadas"}
-              </Text>
-            </Center>
-          )}
-        />
+        {loading ? (
+          <Loading />
+        ) : (
+          <FlatList
+            data={orders}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <Order data={item} onPress={() => handleOpenDetails(item.id)} />
+            )}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 100 }}
+            ListEmptyComponent={() => (
+              <Center>
+                <MaterialCommunityIcons
+                  name="message-text-outline"
+                  size={40}
+                  color={colors.gray[300]}
+                />
+                <Text color="gray.300" fontSize="xl" mt={6} textAlign="center">
+                  Você ainda não tem {"\n"} solicitações
+                  {statusSelected === "open" ? " em andamento" : " finalizadas"}
+                </Text>
+              </Center>
+            )}
+          />
+        )}
 
         <Button title="Nova Solicitação" onPress={handleNewOrder} />
       </VStack>
